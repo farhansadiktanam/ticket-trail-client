@@ -202,7 +202,7 @@ export default function Banner() {
                 <CalendarDays className="h-4 w-4 shrink-0 text-[#6E7A8F]" />
                 <input
                   type="date"
-                  className="w-full bg-transparent text-sm text-white focus:outline-none [color-scheme:dark]"
+                  className="w-full bg-transparent text-sm text-white focus:outline-none scheme:dark"
                 />
               </div>
             </label>
