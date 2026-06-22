@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Mail, Phone, Facebook, Ticket } from "lucide-react";
 
 import { FaFacebook, FaTicketAlt } from "react-icons/fa";
+import Logo from "./logo";
 
 const quickLinks = [
   { label: "Home", href: "/" },
@@ -32,12 +33,7 @@ export default function Footer() {
           {/* Column 1 — Logo + description */}
           <div className="lg:pr-6">
             <div className="flex items-center gap-2">
-              <div className="bg-linear-to-tr from-orange-500 to-orange-500 p-2 rounded-lg text-white shadow-md shadow-orange-500/20">
-                <FaTicketAlt className="text-xl" />
-              </div>
-              <span className="font-extrabold text-xl tracking-tight bg-linear-to-r from-white via-slate-200 to-orange-500 bg-clip-text text-transparent">
-                TicketTrail
-              </span>
+              <Logo />
             </div>
             <p className="mt-4 text-sm leading-relaxed text-[#8A96A8]">
               Book bus, train, launch &amp; flight tickets easily.

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Avatar, Button } from "@heroui/react";
 import { FaTicketAlt } from "react-icons/fa";
 import { authClient } from "@/lib/auth-client";
+import Logo from "./logo";
 
 export default function Navbar() {
   const router = useRouter();
@@ -20,12 +21,7 @@ export default function Navbar() {
   return (
     <nav className="flex justify-between items-center p-4 shadow-lg bg-slate-900">
       <Link href="/" className="flex items-center gap-2">
-        <div className="bg-linear-to-tr from-orange-500 to-orange-500 p-2 rounded-lg text-white shadow-md shadow-orange-500/20">
-          <FaTicketAlt className="text-xl" />
-        </div>
-        <span className="font-extrabold text-xl tracking-tight bg-linear-to-r from-white via-slate-200 to-orange-500 bg-clip-text text-transparent">
-          TicketTrail
-        </span>
+        <Logo />
       </Link>
 
       <ul className="flex gap-3 font-semibold text-slate-200">
