@@ -1,56 +1,103 @@
 "use client";
 
-import { Avatar, Button } from "@heroui/react";
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/navigation";
+import { Avatar, Button } from "@heroui/react";
+import { FaTicketAlt } from "react-icons/fa";
+import { authClient } from "@/lib/auth-client";
 
-const Navbar = () => {
+export default function Navbar() {
+  const router = useRouter();
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+  console.log(user);
+
+  const handleSignOut = async () => {
+    await authClient.signOut();
+    router.push("/");
+  };
+
   return (
-    <nav className="flex justify-between items-center p-4 shadow-lg">
-      <h2 className="font-bold text-xl">
-        Ticket
-        <span className="text-xl font-black tracking-tighter text-orange-500">
-          Trail
+    <nav className="flex justify-between items-center p-4 shadow-lg bg-slate-900">
+      <Link href="/" className="flex items-center gap-2">
+        <div className="bg-linear-to-tr from-orange-500 to-orange-500 p-2 rounded-lg text-white shadow-md shadow-orange-500/20">
+          <FaTicketAlt className="text-xl" />
+        </div>
+        <span className="font-extrabold text-xl tracking-tight bg-linear-to-r from-white via-slate-200 to-orange-500 bg-clip-text text-transparent">
+          TicketTrail
         </span>
-      </h2>
-      <ul className="flex gap-3 font-semibold">
+      </Link>
+
+      <ul className="flex gap-3 font-semibold text-slate-200">
         <li>
-          <Link href={"/"}>Home</Link>
+          <Link href={"/"} className="transition-colors hover:text-orange-400">
+            Home
+          </Link>
         </li>
         <li>
-          <Link href={"/explore-cars"}>Explore Cars</Link>
+          <Link
+            href={"/all-tickets"}
+            className="transition-colors hover:text-orange-400"
+          >
+            All Tickets
+          </Link>
         </li>
         <li>
-          <Link href={"/add-car"}>Add Car</Link>
+          <Link
+            href={"/my-bookings"}
+            className="transition-colors hover:text-orange-400"
+          >
+            My Bookings
+          </Link>
         </li>
         <li>
-          <Link href={"/my-bookings"}> My Bookings</Link>
+          <Link
+            href={"/contact"}
+            className="transition-colors hover:text-orange-400"
+          >
+            Contact Us
+          </Link>
         </li>
       </ul>
 
-      {/* <ul className="flex gap-3 items-center font-semibold">
+      <ul className="flex gap-3 items-center font-semibold text-slate-200">
         {user && (
           <li>
-            <Link href={"/profile"}>Profile</Link>
+            <Link
+              href={"/profile"}
+              className="transition-colors hover:text-orange-400"
+            >
+              Profile
+            </Link>
           </li>
         )}
         {user ? (
           <>
             {" "}
             <Avatar>
-              <Avatar.Image alt="John Doe" src={user?.image} />
+              <Avatar.Image alt={user?.name} src={user?.image} />
               <Avatar.Fallback>
-                {user?.name.slice(0, 2).toUpperCase()}
+                {user?.name?.slice(0, 2).toUpperCase()}
               </Avatar.Fallback>
             </Avatar>
           </>
         ) : (
           <>
             <li>
-              <Link href={"/login"}>Login</Link>
+              <Link
+                href={"/login"}
+                className="transition-colors hover:text-orange-400"
+              >
+                Login
+              </Link>
             </li>
             <li>
-              <Link href={"/register"}>Sign Up</Link>
+              <Link
+                href={"/register"}
+                className="transition-colors hover:text-orange-400"
+              >
+                Sign Up
+              </Link>
             </li>{" "}
           </>
         )}
@@ -65,9 +112,7 @@ const Navbar = () => {
             </Button>
           </li>
         )}
-      </ul> */}
+      </ul>
     </nav>
   );
-};
-
-export default Navbar;
+}

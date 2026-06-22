@@ -1,7 +1,7 @@
 import Banner from "@/components/Banner";
 import PopularRoutes from "@/components/PopularRoutes";
+import Testimonial from "@/components/Testimonial";
 import WhyChooseUs from "@/components/WhyChooseUs";
-import Image from "next/image";
 
 export default function Home() {
   return (
@@ -9,6 +9,7 @@ export default function Home() {
       <Banner />
       <PopularRoutes />
       <WhyChooseUs />
+      <Testimonial />
     </div>
   );
 }
