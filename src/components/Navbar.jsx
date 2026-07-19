@@ -2,17 +2,23 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { FaTicketAlt, FaUser, FaSignOutAlt, FaThLarge } from "react-icons/fa";
+import { usePathname, useRouter } from "next/navigation";
+import { FaUser, FaSignOutAlt, FaThLarge } from "react-icons/fa";
 
-// import ThemeSwitcher from "./ThemeSwitcher";
 import Logo from "./logo";
+
+import Image from "next/image";
+import { signOut, useSession } from "@/lib/auth-client";
+import toast from "react-hot-toast";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { data: session } = useSession();
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const user = session?.user;
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -24,17 +30,10 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setDropdownOpen(false);
-    alert("Logged Out! (Design Only)");
-  };
-
-  const mockUser = {
-    name: "Jane Doe",
-    email: "jane@example.com",
-    role: "attendee",
-    image: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde",
+  const handleLogout = async () => {
+    await signOut();
+    toast.success("Logout successfully...!!");
+    router.push("/");
   };
 
   return (
@@ -42,25 +41,24 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* LOGO */}
         <Logo />
-
         {/* NAVIGATION LINKS */}
         <div className="hidden sm:flex items-center gap-8">
           <Link
             href="/"
-            className={`text-sm font-medium transition-colors ${pathname === "/" ? "text-pink-500 font-semibold" : "text-slate-300 hover:text-white"}`}
+            className={`text-sm font-medium transition-colors ${pathname === "/" ? "text-orange-500 font-semibold" : "text-slate-300 hover:text-white"}`}
           >
             Home
           </Link>
           <Link
-            href="/events"
-            className={`text-sm font-medium transition-colors ${pathname.startsWith("/events") ? "text-pink-500 font-semibold" : "text-slate-300 hover:text-white"}`}
+            href="/all-tickets"
+            className={`text-sm font-medium transition-colors ${pathname.startsWith("/events") ? "text-orange-500 font-semibold" : "text-slate-300 hover:text-white"}`}
           >
-            Browse Events
+            All Tickets
           </Link>
-          {isLoggedIn && (
+          {user && session?.user && (
             <Link
-              href={"/"}
-              className={`text-sm font-medium transition-colors ${pathname.startsWith("/dashboard") ? "text-pink-500 font-semibold" : "text-slate-300 hover:text-white"}`}
+              href={"/dashboard"}
+              className={`text-sm font-medium transition-colors ${pathname.startsWith("/dashboard") ? "text-orange-500 font-semibold" : "text-slate-300 hover:text-white"}`}
             >
               Dashboard
             </Link>
@@ -69,33 +67,41 @@ export default function Navbar() {
 
         {/* RIGHT ACTIONS */}
         <div className="flex items-center gap-4">
-          {!isLoggedIn && (
+          {!session && !session?.user && (
             <div className="flex items-center gap-3">
-              <button
-                onClick={() => setIsLoggedIn(true)}
-                className="inline-flex items-center justify-center font-semibold text-xs text-slate-300 hover:text-white h-9 px-4 rounded-xl hover:bg-white/5 transition"
-              >
-                Login
-              </button>
+              <Link href={"/login"}>
+                <button
+                  onClick={() => setIsLoggedIn(true)}
+                  className="inline-flex items-center justify-center font-semibold text-xs text-slate-300 hover:text-white h-9 px-4 rounded-xl hover:bg-white/5 transition"
+                >
+                  Login
+                </button>
+              </Link>
               <Link
                 href="/register"
-                className="inline-flex items-center justify-center font-semibold text-xs bg-linear-to-r from-pink-500 to-indigo-600 text-white shadow-lg shadow-pink-500/10 hover:shadow-pink-500/20 transition h-9 px-4 rounded-xl"
+                className="inline-flex items-center justify-center rounded-xl bg-linear-to-r from-orange-500 to-amber-500 px-4 h-9 text-xs font-semibold text-white shadow-lg shadow-orange-500/30 transition-all duration-300 hover:from-orange-600 hover:to-amber-600 hover:shadow-orange-500/50"
               >
                 Sign Up
               </Link>
             </div>
           )}
 
-          {isLoggedIn && (
+          {session && session?.user && (
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="flex items-center transition-transform hover:scale-105 outline-none focus:outline-none cursor-pointer"
               >
-                <img
+                <Image
                   className="w-9 h-9 rounded-full object-cover border border-pink-500 shadow-md shadow-pink-500/10"
-                  src={mockUser.image}
+                  src={
+                    user?.image ||
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || "U")}&background=ec4899&color=fff&bold=true`
+                  }
                   alt="avatar"
+                  width={40}
+                  height={40}
+                  unoptimized
                 />
               </button>
 
@@ -104,19 +110,19 @@ export default function Navbar() {
                   {/* User info */}
                   <div className="px-4 py-2.5 border-b border-white/5 mb-1.5 cursor-default">
                     <p className="text-[10px] text-pink-400 font-bold uppercase tracking-wider">
-                      {mockUser.role} Account
+                      {user?.role} Account
                     </p>
                     <p className="font-bold text-white text-sm mt-0.5">
-                      {mockUser.name}
+                      {user?.name}
                     </p>
                     <p className="text-[11px] text-slate-400 truncate mt-0.5">
-                      {mockUser.email}
+                      {user?.email}
                     </p>
                   </div>
 
                   {/* Actions */}
                   <Link
-                    href="/dashboard/organizer"
+                    href="/dashboard/"
                     onClick={() => setDropdownOpen(false)}
                     className="w-full flex items-center gap-2.5 px-4 py-2.5 text-left text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition cursor-pointer"
                   >
@@ -125,7 +131,7 @@ export default function Navbar() {
                   </Link>
 
                   <Link
-                    href={`/dashboard/${mockUser.role}`}
+                    href={`/dashboard/${user?.role}`}
                     onClick={() => setDropdownOpen(false)}
                     className="w-full flex items-center gap-2.5 px-4 py-2.5 text-left text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition cursor-pointer"
                   >

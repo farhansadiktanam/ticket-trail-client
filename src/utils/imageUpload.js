@@ -1,7 +1,6 @@
 import toast from "react-hot-toast";
 
 export const uploadImage = async (imageFile) => {
-  console.log(imageFile);
   const imageData = new FormData();
   imageData.append("image", imageFile);
 

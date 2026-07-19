@@ -22,10 +22,8 @@ import {
 
 import { signUp } from "@/lib/auth-client";
 import { redirect } from "next/navigation";
-// import { error } from "better-auth/api";
-// import toast from "react-hot-toast";
+import toast from "react-hot-toast";
 import Logo from "@/components/logo";
-import { uploadImage } from "@/utils/imageUpload";
 
 export default function RegisterPage() {
   const onSubmit = async (e) => {
@@ -33,20 +31,19 @@ export default function RegisterPage() {
     const formData = new FormData(e.currentTarget);
     const userData = Object.fromEntries(formData.entries());
 
-    const imageFile = userData.image;
-    const imageUrl = await uploadImage(imageFile);
-
     const { data: signUpdata, error: signUpError } = await signUp.email({
       ...userData,
-      image: imageUrl,
     });
+    if (!signUpError) {
+      toast.success("Sign up successful....!!");
+    }
     console.log(signUpdata, signUpError, "SIGNUP PAGE");
 
-    // redirect("/");
+    redirect("/");
   };
 
   return (
-    <Card className="w-full max-w-lg border border-white/5 bg-slate-950/70 backdrop-blur-xl shadow-2xl p-4 mx-auto">
+    <Card className="w-full max-w-lg border mt-10 border-white/5 bg-slate-950/70 backdrop-blur-xl shadow-2xl p-4 mx-auto">
       <CardHeader className="flex flex-col gap-1 items-center pb-6 text-center">
         <Logo />
         <h1 className="text-3xl font-extrabold tracking-tight bg-linear-to-r from-white via-slate-100 to-orange-500 bg-clip-text text-transparent">
@@ -79,7 +76,7 @@ export default function RegisterPage() {
             // startContent={<FaEnvelope className="text-slate-400 text-sm" />}
             className="w-full bg-slate-900/50 border-white/10 hover:border-pink-500/50 focus-within:border-pink-500!"
           />
-          <Label htmlFor="image">Profile Image URL</Label>
+          {/* <Label htmlFor="image">Profile Image URL</Label>
           <Input
             id="image"
             type="file"
@@ -90,7 +87,7 @@ export default function RegisterPage() {
             // labelPlacement="outside"
             // startContent={<FaImage className="text-slate-400 text-sm" />}
             className="w-full bg-slate-900/50 border-white/10 hover:border-pink-500/50 focus-within:border-pink-500!"
-          />
+          /> */}
 
           <Label htmlFor="password">Password</Label>
           <Input
@@ -125,20 +122,20 @@ export default function RegisterPage() {
               <SelectPopover className="bg-slate-950 border border-white/10 rounded-xl shadow-2xl p-1 min-w-50">
                 <ListBox className="outline-none">
                   <ListBoxItem
-                    key="attendee"
+                    key="user"
                     id="attendee"
                     textValue="Attendee"
                     className="p-2 text-white hover:bg-pink-500/20 rounded-lg cursor-pointer"
                   >
-                    Attendee (Browse & Book Tickets)
+                    User (Browse & Book Tickets)
                   </ListBoxItem>
                   <ListBoxItem
-                    key="organizer"
+                    key="vendor"
                     id="organizer"
                     textValue="Organizer"
                     className="p-2 text-white hover:bg-pink-500/20 rounded-lg cursor-pointer"
                   >
-                    Organizer (Create & Host Events)
+                    Vendor (Create & Host Events)
                   </ListBoxItem>
                 </ListBox>
               </SelectPopover>
@@ -163,7 +160,7 @@ export default function RegisterPage() {
         </div>
 
         <Button
-          variant="bordered"
+          variant="outline"
           className="w-full border-white/10 hover:bg-white/5 hover:border-white/20 text-white font-semibold h-11"
           radius="lg"
           // startContent={<FaGoogle className="text-pink-500" />}

@@ -50,7 +50,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-[#8A96A8] transition-colors hover:text-[#36C2B4]"
+                    className="text-sm text-[#8A96A8] transition-colors hover:text-orange-500"
                   >
                     {link.label}
                   </Link>
@@ -68,7 +68,7 @@ export default function Footer() {
               <li>
                 <a
                   href="mailto:support@tickettrail.com"
-                  className="flex items-center gap-2 text-sm text-[#8A96A8] transition-colors hover:text-[#36C2B4]"
+                  className="flex items-center gap-2 text-sm text-[#8A96A8] transition-colors hover:text-orange-500"
                 >
                   <Mail className="h-4 w-4 shrink-0" />
                   support@tickettrail.com
@@ -77,7 +77,7 @@ export default function Footer() {
               <li>
                 <a
                   href="tel:+8800000000000"
-                  className="flex items-center gap-2 text-sm text-[#8A96A8] transition-colors hover:text-[#36C2B4]"
+                  className="flex items-center gap-2 text-sm text-[#8A96A8] transition-colors hover:text-orange-500"
                 >
                   <Phone className="h-4 w-4 shrink-0" />
                   +880 000-000000
@@ -88,7 +88,7 @@ export default function Footer() {
                   href="https://facebook.com/tickettrail"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-[#8A96A8] transition-colors hover:text-[#36C2B4]"
+                  className="flex items-center gap-2 text-sm text-[#8A96A8] transition-colors hover:text-orange-500"
                 >
                   <FaFacebook className="h-4 w-4 shrink-0" />
                   facebook.com/tickettrail

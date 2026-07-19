@@ -1,4 +1,5 @@
 import { betterAuth } from "better-auth";
+import { jwt } from "better-auth/plugins";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { MongoClient } from "mongodb";
 
@@ -19,14 +20,15 @@ export const auth = betterAuth({
         process.env.GOOGLE_CLIENT_SECRET || "placeholder-google-client-secret",
     },
   },
-  // user: {
-  //   additionalFields: {
-  //     role: {
-  //       defaultValue: "attendee",
-  //     },
-  //     isBlocked: {
-  //       defaultValue: false,
-  //     },
-  //   },
-  // },
+  user: {
+    additionalFields: {
+      role: {
+        defaultValue: "user",
+      },
+      isBlocked: {
+        defaultValue: false,
+      },
+    },
+  },
+  plugins: [jwt()],
 });

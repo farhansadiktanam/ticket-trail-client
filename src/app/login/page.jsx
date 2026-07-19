@@ -13,17 +13,30 @@ import {
 } from "@heroui/react";
 import { FaEnvelope, FaLock, FaGoogle } from "react-icons/fa";
 import Logo from "@/components/logo";
+import { signIn } from "@/lib/auth-client";
+import toast from "react-hot-toast";
+import { redirect } from "next/navigation";
 
 const LoginPage = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const user = Object.fromEntries(formData.entries());
-    console.log(user);
+
+    const { data: loginData, error: loginError } = await signIn.email({
+      email: user?.email,
+      password: user?.password,
+    });
+    if (!loginError) {
+      toast.success("Login successful....!!!");
+    }
+    console.log(loginData);
+
+    redirect("/");
   };
 
   return (
-    <Card className="w-full max-w-md border border-white/5 bg-slate-950/70 backdrop-blur-xl shadow-2xl p-4 mx-auto">
+    <Card className="w-full max-w-md border mt-10 border-white/5 bg-slate-950/70 backdrop-blur-xl shadow-2xl p-4 mx-auto">
       <CardHeader className="flex flex-col gap-1 items-center pb-6 text-center">
         <Logo />
         <h1 className="text-3xl font-extrabold tracking-tight bg-linear-to-r from-white via-slate-100 to-orange-500 bg-clip-text text-transparent">
