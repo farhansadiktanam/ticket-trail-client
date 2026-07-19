@@ -43,112 +43,117 @@ export default function FilterPanel() {
   // };
 
   return (
-    <Card
-      className="relative overflow-hidden p-8 shadow-2xl rounded-3xl"
-      radius="none"
-    >
-      {/* Decorative gradient glow behind the panel */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-linear-to-br from-pink-500/10 via-purple-600/5 to-transparent blur-3xl pointer-events-none -z-10" />
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-linear-to-tr from-indigo-500/10 via-indigo-600/5 to-transparent blur-3xl pointer-events-none -z-10" />
+    <Card className="relative overflow-hidden p-6 rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur-xl shadow-2xl">
+      {/* Glows */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-pink-500/10 blur-3xl pointer-events-none -z-10" />
+      <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/10 blur-3xl pointer-events-none -z-10" />
 
-      <div className="gap-6 grid grid-cols-1 md:grid-cols-4 items-end">
-        {/* Search Input */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+        {/* Search */}
         <div className="flex flex-col gap-2">
-          <Label
-            htmlFor="search-title"
-            className="text-xs font-bold uppercase tracking-wider text-slate-400"
-          >
+          <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
             Search Title
-          </Label>
+          </label>
           <Input
-            // value={search}
-            // onChange={(e) => setSearch(e.target.value)}
-            id="search-title"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Search keyword..."
-            // startContent={<FaSearch className="text-pink-500 text-sm mr-1" />}
             variant="bordered"
-            className="w-full bg-slate-900/60 border border-white/10 rounded-xl p-3 focus:outline-none focus:border-pink-500 hover:border-white/20 text-white text-sm cursor-pointer h-12 flex items-center transition-all duration-300"
+            className="bg-slate-900/60 border-white/10 text-white h-11"
           />
         </div>
 
-        {/* Category Selector */}
+        {/* Transport */}
         <div className="flex flex-col gap-2">
-          <Label
-            htmlFor="filter-category"
-            className="text-xs font-bold uppercase tracking-wider text-slate-400"
-          >
-            Transport Types
-          </Label>
-          <div className="relative group">
+          <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            Transport Type
+          </label>
+          <div className="relative">
             <select
-              // value={transportTypes}
-              // onChange={(e) => setCategory(e.target.value)}
-              aria-label="Category"
-              className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-3 h-12 text-white text-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-pink-500/50"
+              value={transportTypes}
+              onChange={(e) => setTransport(e.target.value)}
+              className="w-full h-11 pl-4 pr-10 rounded-xl border border-white/10 bg-slate-900/60 text-white text-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-pink-500/50"
             >
-              <option value="" className="bg-slate-950 text-white">
+              <option value="" className="bg-slate-950">
                 All Transport
               </option>
               {transportTypes.map((type) => (
-                <option
-                  key={type}
-                  value={type}
-                  className="bg-slate-950 text-white"
-                >
+                <option key={type} value={type} className="bg-slate-950">
                   {type}
                 </option>
               ))}
             </select>
+            <svg
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
           </div>
         </div>
 
-        {/* Location Selector */}
+        {/* Location */}
         <div className="flex flex-col gap-2">
-          <Label
-            htmlFor="filter-location"
-            className="text-xs font-bold uppercase tracking-wider text-slate-400"
-          >
+          <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
             Location
-          </Label>
-          <div className="relative group">
+          </label>
+          <div className="relative">
             <select
-              // value={location}
-              // onChange={(e) => setLocation(e.target.value)}
-              aria-label="Category"
-              className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-3 h-12 text-white text-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-pink-500/50"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              className="w-full h-11 pl-4 pr-10 rounded-xl border border-white/10 bg-slate-900/60 text-white text-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-pink-500/50"
             >
-              <option value="" className="bg-slate-950 text-white">
+              <option value="" className="bg-slate-950">
                 All Locations
               </option>
               {LOCATIONS.map((loc) => (
-                <option
-                  key={loc}
-                  value={loc}
-                  className="bg-slate-950 text-white"
-                >
+                <option key={loc} value={loc} className="bg-slate-950">
                   {loc}
                 </option>
               ))}
             </select>
+            <svg
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-3 w-full">
+        {/* Buttons */}
+        <div className="flex gap-2">
           <Button
-            // onClick={handleApplyFilters}
-            className="flex items-center justify-center gap-2 self-end rounded-lg bg-[#F2B134] px-6 py-2.5 text-sm font-semibold text-[#0B1320] transition-colors hover:bg-[#F5C158] sm:col-span-2 lg:col-span-1 h-12"
+            // onClick={handleApply}
             startContent={<FaSlidersH size={13} />}
+            className="bg-[#F2B134] text-[#0B1320] font-semibold h-11 px-5 hover:bg-[#F5C158] flex-1"
+            radius="lg"
           >
-            Apply Filters
+            Apply
           </Button>
           <Button
             // onClick={handleReset}
             variant="bordered"
-            className="border-white/10 hover:border-white/20 hover:bg-white/5 text-white font-semibold h-12 transition-all duration-200 px-4 min-w-0"
-            title="Reset Filters"
+            isIconOnly
+            className="border-white/10 hover:border-white/20 hover:bg-white/5 text-slate-400 h-11 w-11"
+            radius="lg"
+            title="Reset"
           >
-            <FaHistory size={13} className="text-slate-400 hover:text-white" />
+            <FaHistory size={13} />
           </Button>
         </div>
       </div>

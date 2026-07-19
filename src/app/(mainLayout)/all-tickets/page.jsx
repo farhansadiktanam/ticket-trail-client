@@ -9,7 +9,7 @@ const TicketPage = async () => {
 
   return (
     <div className="min-h-screen py-16 px-6 max-w-7xl mx-auto w-full space-y-12">
-      <h1 className="text-4xl font-extrabold text-center tracking-tight">
+      <h1 className="text-4xl font-extrabold text-center tracking-tight text-orange-400">
         All Tickets
       </h1>
       <FilterPanel />

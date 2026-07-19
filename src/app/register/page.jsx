@@ -123,16 +123,16 @@ export default function RegisterPage() {
                 <ListBox className="outline-none">
                   <ListBoxItem
                     key="user"
-                    id="attendee"
-                    textValue="Attendee"
+                    id="user"
+                    textValue="User"
                     className="p-2 text-white hover:bg-pink-500/20 rounded-lg cursor-pointer"
                   >
                     User (Browse & Book Tickets)
                   </ListBoxItem>
                   <ListBoxItem
                     key="vendor"
-                    id="organizer"
-                    textValue="Organizer"
+                    id="vendor"
+                    textValue="Vendor"
                     className="p-2 text-white hover:bg-pink-500/20 rounded-lg cursor-pointer"
                   >
                     Vendor (Create & Host Events)

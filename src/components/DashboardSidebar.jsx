@@ -18,14 +18,16 @@ import {
 } from "react-icons/fa";
 import Logo from "./logo";
 import toast from "react-hot-toast";
-import { redirect } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 
 const DashboardSidebar = () => {
   const { data: session } = useSession();
   const user = session?.user;
-  const role = user?.role;
+  // const role = user?.role;
+  const role = "vendor";
+  const pathname = usePathname();
 
-  console.log(user, "DASHBOARD SIDEBAR");
+  // console.log(user, "DASHBOARD SIDEBAR");
 
   const vendorMenuItems = [
     {
@@ -116,6 +118,8 @@ const DashboardSidebar = () => {
           ? adminMenuItems
           : null;
 
+  console.log(menuItems, "menuitems");
+
   const handleLogout = async () => {
     await signOut();
     toast.success("Logout successfull...!!");
@@ -123,7 +127,7 @@ const DashboardSidebar = () => {
   };
   return (
     <div>
-      <aside className="w-64 h-screen border-r border-white/5">
+      <aside className="w-64 h-screen border-r border-white/5 bg-slate-950">
         <div className="h-full flex flex-col bg-slate-950/80 backdrop-blur-xl">
           {/* Brand / Logo */}
           <div className="px-6 py-5 border-b border-white/5">
@@ -139,7 +143,7 @@ const DashboardSidebar = () => {
                   height={40}
                   src={
                     user?.image ||
-                    `https://ui-avatars.com/api/?name=${encodeURIComponent("Jane Doe")}&background=7c3aed&color=fff&bold=true`
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || "U")}&background=7c3aed&color=fff&bold=true`
                   }
                   alt="Avatar"
                   className="object-cover w-full h-full"
@@ -151,7 +155,13 @@ const DashboardSidebar = () => {
                   {user?.name}
                 </p>
                 <span
-                  className={`text-[10px] font-bold uppercase tracking-wider ${role === "admin" ? "text-yellow-400" : user?.role === "organizer" ? "text-indigo-400" : "text-pink-400"}`}
+                  className={`text-[10px] font-bold uppercase tracking-wider ${
+                    role === "admin"
+                      ? "text-yellow-400"
+                      : role === "organizer"
+                        ? "text-indigo-400"
+                        : "text-pink-400"
+                  }`}
                 >
                   {role}
                 </span>
@@ -166,22 +176,32 @@ const DashboardSidebar = () => {
             </p>
 
             {menuItems?.map(({ key, label, icon: Icon, href }) => {
+              const isActive = pathname === href;
               return (
                 <Link
                   key={key}
                   href={href}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 text-left cursor-pointer 
-                  `}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 cursor-pointer
+                ${
+                  isActive
+                    ? "bg-pink-500/10 text-pink-400 border border-pink-500/20"
+                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                }`}
                 >
                   <span
-                    className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors `}
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors
+                  ${
+                    isActive
+                      ? "bg-pink-500/20 text-pink-400"
+                      : "bg-white/5 text-slate-400 group-hover:text-white"
+                  }`}
                   >
                     <Icon size={14} />
                   </span>
                   <span>{label}</span>
-                  {/* {isActive && ( */}
-                  {/* <span className="ml-auto w-1.5 h-1.5 rounded-full bg-pink-400" /> */}
-                  {/* // )} */}
+                  {isActive && (
+                    <span className="ml-auto w-1.5 h-1.5 rounded-full bg-pink-400" />
+                  )}
                 </Link>
               );
             })}
