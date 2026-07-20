@@ -4,12 +4,11 @@ import DashboardHeading from "./DashboardHeading";
 
 const ProfilePage = async () => {
   const user = await getUser();
-  console.log(user, "from profile page");
 
   const roleColor = {
     admin: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
-    vendor: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
-    user: "bg-pink-500/10 text-pink-400 border-pink-500/20",
+    vendor: "bg-pink-500/10 text-pink-400 border-pink-500/20",
+    user: "bg-orange-500/10 text-orange-400 border-orange-500/20",
   };
 
   const memberSince = user?.createdAt

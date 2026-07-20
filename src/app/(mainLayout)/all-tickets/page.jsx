@@ -5,7 +5,7 @@ import React from "react";
 
 const TicketPage = async () => {
   const tickets = await fetchTickets();
-  console.log(tickets);
+  // console.log(tickets);
 
   return (
     <div className="min-h-screen py-16 px-6 max-w-7xl mx-auto w-full space-y-12">

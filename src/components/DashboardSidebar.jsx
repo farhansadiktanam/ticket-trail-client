@@ -174,8 +174,8 @@ const DashboardSidebar = () => {
                   className={`text-[10px] font-bold uppercase tracking-wider ${
                     role === "admin"
                       ? "text-yellow-400"
-                      : role === "organizer"
-                        ? "text-indigo-400"
+                      : role === "user"
+                        ? "text-orange-400"
                         : "text-pink-400"
                   }`}
                 >

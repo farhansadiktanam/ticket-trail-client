@@ -14,8 +14,7 @@ import {
 import { Bus, Package, Users, BadgeCheck, ArrowRight } from "lucide-react";
 
 export default function TicketCard({ ticket }) {
-  console.log("From ticket card", ticket);
-
+  // console.log("From ticket card", ticket);
   return (
     <Card
       shadow="lg"
