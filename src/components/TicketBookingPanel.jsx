@@ -148,7 +148,7 @@ export default function TicketBookingPanel({ ticketId, price, quantity }) {
 
         {/* Book button */}
         <Button
-          // onPress={handleBook}
+          onPress={handleBook}
           isLoading={loading}
           isDisabled={soldOut}
           className={`w-full font-bold text-sm h-10 ${

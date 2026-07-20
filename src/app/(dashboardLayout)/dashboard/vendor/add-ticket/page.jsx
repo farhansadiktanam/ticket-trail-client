@@ -10,6 +10,7 @@ import {
   Button,
 } from "@heroui/react";
 import { uploadImage } from "@/utils/imageUpload";
+import Image from "next/image";
 
 const PERKS = [
   "AC",
@@ -257,10 +258,12 @@ export default function AddTicketPage() {
                 className="text-sm text-slate-400 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-700 file:px-3 file:py-1.5 file:text-sm file:text-white file:cursor-pointer"
               />
               {preview && (
-                <img
+                <Image
                   src={preview}
                   alt="Preview"
-                  className="h-40 w-full rounded-xl object-cover"
+                  fill
+                  unoptimized
+                  className="rounded-xl object-cover"
                 />
               )}
             </CardBody>
