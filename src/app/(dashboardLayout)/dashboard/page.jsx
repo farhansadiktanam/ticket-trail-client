@@ -1,7 +1,7 @@
 import React from "react";
 
-const OrganizerDashboard = () => {
-  return <div>Organizer Dashboard</div>;
+const VendorDashboard = () => {
+  return <div>Vendor Dashboard</div>;
 };
 
-export default OrganizerDashboard;
+export default VendorDashboard;

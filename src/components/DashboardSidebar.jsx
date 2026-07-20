@@ -24,7 +24,7 @@ const DashboardSidebar = () => {
   const { data: session } = useSession();
   const user = session?.user;
   // const role = user?.role;
-  const role = "vendor";
+  const role = "user";
   const pathname = usePathname();
 
   // console.log(user, "DASHBOARD SIDEBAR");
@@ -87,7 +87,7 @@ const DashboardSidebar = () => {
       key: "profile",
       label: "Profile",
       icon: FaUserShield,
-      href: "/dashboard/admin",
+      href: "/dashboard/admin/profile",
     },
     {
       key: "manage-tickets",
@@ -117,8 +117,6 @@ const DashboardSidebar = () => {
         : role === "admin"
           ? adminMenuItems
           : null;
-
-  console.log(menuItems, "menuitems");
 
   const handleLogout = async () => {
     await signOut();
@@ -184,7 +182,7 @@ const DashboardSidebar = () => {
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 cursor-pointer
                 ${
                   isActive
-                    ? "bg-pink-500/10 text-pink-400 border border-pink-500/20"
+                    ? "bg-orange-500/10 text-orange-400 border border-orange-500/20"
                     : "text-slate-400 hover:text-white hover:bg-white/5"
                 }`}
                 >
@@ -192,7 +190,7 @@ const DashboardSidebar = () => {
                     className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors
                   ${
                     isActive
-                      ? "bg-pink-500/20 text-pink-400"
+                      ? "bg-orange-500/20 text-orange-400"
                       : "bg-white/5 text-slate-400 group-hover:text-white"
                   }`}
                   >
@@ -200,7 +198,7 @@ const DashboardSidebar = () => {
                   </span>
                   <span>{label}</span>
                   {isActive && (
-                    <span className="ml-auto w-1.5 h-1.5 rounded-full bg-pink-400" />
+                    <span className="ml-auto w-1.5 h-1.5 rounded-full bg-orange-400" />
                   )}
                 </Link>
               );

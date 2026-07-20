@@ -86,15 +86,17 @@ export default function TicketCard({ ticket }) {
           <p className="text-xs text-slate-500">Price per Ticket</p>
           <p className="text-2xl font-bold text-violet-400">${ticket.price}</p>
         </div>
-        <Button
-          as={Link}
-          href={`/all-tickets/${ticket._id}`}
-          endContent={<ArrowRight size={16} />}
-          className="bg-orange-600 hover:bg-orange-500 text-white font-semibold"
-          radius="lg"
-        >
-          See Details
-        </Button>
+
+        <Link href={`/all-tickets/${ticket._id}`}>
+          <Button
+            // as={Link}
+            endContent={<ArrowRight size={16} />}
+            className="bg-orange-600 hover:bg-orange-500 text-white font-semibold"
+            radius="lg"
+          >
+            See Details
+          </Button>
+        </Link>
       </CardFooter>
     </Card>
   );
