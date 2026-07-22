@@ -19,11 +19,11 @@ const ProfilePage = async () => {
     : "N/A";
 
   return (
-    <div className="space-y-6 mt-6 max-w-4xl">
+    <div className="space-y-6 mt-6 max-w-4xl transition-colors duration-200">
       <DashboardHeading title="Profile" description="My account details" />
 
       {/* Profile Card */}
-      <div className="border border-white/5 rounded-2xl overflow-hidden bg-slate-900/40 backdrop-blur-xl">
+      <div className="border border-slate-200 dark:border-white/5 rounded-2xl overflow-hidden bg-white/80 dark:bg-slate-900/40 backdrop-blur-xl shadow-xs dark:shadow-none transition-colors duration-200">
         {/* Banner */}
         <div className="h-28 bg-linear-to-r from-orange-600 via-amber-500 to-yellow-400 relative">
           <div className="absolute inset-0 opacity-20 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(255,255,255,0.05)_10px,rgba(255,255,255,0.05)_20px)]" />
@@ -41,13 +41,17 @@ const ProfilePage = async () => {
               width={72}
               height={72}
               unoptimized
-              className="rounded-full border-3 border-slate-900 object-cover"
+              className="rounded-full border-3 border-white dark:border-slate-900 object-cover shadow-sm dark:shadow-none"
             />
-            <span className="absolute bottom-0.5 right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-slate-900" />
+            <span className="absolute bottom-0.5 right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white dark:border-slate-900" />
           </div>
 
-          <h2 className="text-xl font-bold text-white">{user?.name}</h2>
-          <p className="text-sm text-slate-400 mt-0.5 mb-3">{user?.email}</p>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+            {user?.name}
+          </h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5 mb-3">
+            {user?.email}
+          </p>
           <span
             className={`text-[11px] font-bold uppercase tracking-wider border rounded-full px-3 py-1 ${
               roleColor[user?.role] || roleColor.user
@@ -59,12 +63,12 @@ const ProfilePage = async () => {
       </div>
 
       {/* Details Card */}
-      <div className="border border-white/5 rounded-2xl bg-slate-900/40 backdrop-blur-xl p-6">
-        <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-4">
+      <div className="border border-slate-200 dark:border-white/5 rounded-2xl bg-white/80 dark:bg-slate-900/40 backdrop-blur-xl p-6 shadow-xs dark:shadow-none transition-colors duration-200">
+        <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-4">
           Account Details
         </p>
 
-        <div className="divide-y divide-white/5">
+        <div className="divide-y divide-slate-100 dark:divide-white/5">
           {[
             { label: "Full Name", value: user?.name },
             { label: "Email Address", value: user?.email },
@@ -72,8 +76,12 @@ const ProfilePage = async () => {
             { label: "Member Since", value: memberSince },
           ].map(({ label, value }) => (
             <div key={label} className="py-4 first:pt-0 last:pb-0">
-              <p className="text-xs text-slate-500 mb-1">{label}</p>
-              <p className="text-sm font-medium text-white">{value}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">
+                {label}
+              </p>
+              <p className="text-sm font-medium text-slate-900 dark:text-white">
+                {value}
+              </p>
             </div>
           ))}
         </div>

@@ -4,8 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@heroui/react";
 import { Ticket, Shield, CheckCircle2, Minus, Plus } from "lucide-react";
+import Link from "next/link";
+import { useSession } from "@/lib/auth-client";
 
 export default function TicketBookingPanel({ ticketId, price, quantity }) {
+  const { data: session } = useSession();
+
   const router = useRouter();
   const [qty, setQty] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -22,7 +26,11 @@ export default function TicketBookingPanel({ ticketId, price, quantity }) {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ticketId, quantity: qty }),
+          body: JSON.stringify({
+            ticketId,
+            quantity: qty,
+            userEmail: session?.user?.email,
+          }),
         },
       );
       if (!res.ok) throw new Error("Booking failed");
@@ -55,22 +63,24 @@ export default function TicketBookingPanel({ ticketId, price, quantity }) {
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-slate-400">Unit price</span>
-            <span className="text-white">৳{price.toLocaleString()}</span>
+            <span className="text-white">Tk{price.toLocaleString()}</span>
           </div>
           <div className="border-t border-white/5 pt-2 flex justify-between">
             <span className="text-slate-300 font-semibold">Total Paid</span>
             <span className="text-orange-400 font-extrabold text-lg">
-              ৳{total.toLocaleString()}
+              Tk{total.toLocaleString()}
             </span>
           </div>
         </div>
 
-        <Button
-          onPress={() => router.push("/my-bookings")}
-          className="mt-5 w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm h-10"
-        >
-          View My Bookings
-        </Button>
+        <Link href={"/dashboard/user/booked-tickets"}>
+          <Button
+            onPress={() => router.push("/my-bookings")}
+            className="mt-5 w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm h-10"
+          >
+            View My Bookings
+          </Button>
+        </Link>
       </div>
     );
   }
@@ -84,7 +94,7 @@ export default function TicketBookingPanel({ ticketId, price, quantity }) {
           Price per seat
         </p>
         <p className="mt-0.5 text-3xl font-extrabold text-white">
-          ৳{price.toLocaleString()}
+          Tk{price.toLocaleString()}
         </p>
         {/* Ticket-stub notches */}
         <span className="absolute -bottom-3 left-4 h-6 w-6 rounded-full bg-slate-950" />
@@ -142,7 +152,7 @@ export default function TicketBookingPanel({ ticketId, price, quantity }) {
         <div className="flex items-center justify-between rounded-xl bg-slate-800/60 border border-white/5 px-4 py-3">
           <span className="text-sm text-slate-400">Total</span>
           <span className="text-xl font-extrabold text-orange-400">
-            ৳{total.toLocaleString()}
+            Tk{total.toLocaleString()}
           </span>
         </div>
 

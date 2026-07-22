@@ -23,7 +23,7 @@ const PERKS = [
   "Cabin",
 ];
 
-export default function AddTicketPage() {
+export default function VendorAddTicketPage() {
   const router = useRouter();
   const { data: session } = authClient.useSession();
   const user = session?.user;

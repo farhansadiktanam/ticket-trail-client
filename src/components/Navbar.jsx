@@ -10,6 +10,7 @@ import Logo from "./logo";
 import Image from "next/image";
 import { signOut, useSession } from "@/lib/auth-client";
 import toast from "react-hot-toast";
+import { ThemeSwitch } from "./ThemeSwitch";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -37,28 +38,41 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-white/5 bg-slate-950/65 backdrop-blur-md py-3.5 px-6">
+    <nav className="sticky top-0 z-50 w-full border-b border-black/5 dark:border-white/5 bg-white/70 dark:bg-slate-950/65 backdrop-blur-md py-3.5 px-6 transition-colors duration-200">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* LOGO */}
         <Logo />
+
         {/* NAVIGATION LINKS */}
         <div className="hidden sm:flex items-center gap-8">
           <Link
             href="/"
-            className={`text-sm font-medium transition-colors ${pathname === "/" ? "text-orange-500 font-semibold" : "text-slate-300 hover:text-white"}`}
+            className={`text-sm font-medium transition-colors ${
+              pathname === "/"
+                ? "text-orange-500 font-semibold"
+                : "text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
+            }`}
           >
             Home
           </Link>
           <Link
             href="/all-tickets"
-            className={`text-sm font-medium transition-colors ${pathname.startsWith("/events") ? "text-orange-500 font-semibold" : "text-slate-300 hover:text-white"}`}
+            className={`text-sm font-medium transition-colors ${
+              pathname.startsWith("/events")
+                ? "text-orange-500 font-semibold"
+                : "text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
+            }`}
           >
             All Tickets
           </Link>
           {user && session?.user && (
             <Link
               href={`/dashboard/${user?.role}`}
-              className={`text-sm font-medium transition-colors ${pathname.startsWith("/dashboard") ? "text-orange-500 font-semibold" : "text-slate-300 hover:text-white"}`}
+              className={`text-sm font-medium transition-colors ${
+                pathname.startsWith("/dashboard")
+                  ? "text-orange-500 font-semibold"
+                  : "text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
+              }`}
             >
               Dashboard
             </Link>
@@ -72,7 +86,7 @@ export default function Navbar() {
               <Link href={"/login"}>
                 <button
                   onClick={() => setIsLoggedIn(true)}
-                  className="inline-flex items-center justify-center font-semibold text-xs text-slate-300 hover:text-white h-9 px-4 rounded-xl hover:bg-white/5 transition"
+                  className="inline-flex items-center justify-center font-semibold text-xs text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white h-9 px-4 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition"
                 >
                   Login
                 </button>
@@ -106,16 +120,16 @@ export default function Navbar() {
               </button>
 
               {dropdownOpen && (
-                <div className="absolute right-0 mt-3 w-56 bg-slate-900/95 border border-white/10 rounded-2xl shadow-2xl backdrop-blur-xl py-2 z-55 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="absolute right-0 mt-3 w-56 bg-white/95 dark:bg-slate-900/95 border border-black/10 dark:border-white/10 rounded-2xl shadow-2xl backdrop-blur-xl py-2 z-55 animate-in fade-in slide-in-from-top-2 duration-200">
                   {/* User info */}
-                  <div className="px-4 py-2.5 border-b border-white/5 mb-1.5 cursor-default">
-                    <p className="text-[10px] text-pink-400 font-bold uppercase tracking-wider">
+                  <div className="px-4 py-2.5 border-b border-black/5 dark:border-white/5 mb-1.5 cursor-default">
+                    <p className="text-[10px] text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">
                       {user?.role} Account
                     </p>
-                    <p className="font-bold text-white text-sm mt-0.5">
+                    <p className="font-bold text-slate-900 dark:text-white text-sm mt-0.5">
                       {user?.name}
                     </p>
-                    <p className="text-[11px] text-slate-400 truncate mt-0.5">
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
                       {user?.email}
                     </p>
                   </div>
@@ -124,7 +138,7 @@ export default function Navbar() {
                   <Link
                     href="/dashboard/"
                     onClick={() => setDropdownOpen(false)}
-                    className="w-full flex items-center gap-2.5 px-4 py-2.5 text-left text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition cursor-pointer"
+                    className="w-full flex items-center gap-2.5 px-4 py-2.5 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition cursor-pointer"
                   >
                     <FaThLarge className="text-slate-400 text-sm shrink-0" />
                     <span>My Dashboard</span>
@@ -133,25 +147,26 @@ export default function Navbar() {
                   <Link
                     href={`/dashboard/${user?.role}`}
                     onClick={() => setDropdownOpen(false)}
-                    className="w-full flex items-center gap-2.5 px-4 py-2.5 text-left text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition cursor-pointer"
+                    className="w-full flex items-center gap-2.5 px-4 py-2.5 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition cursor-pointer"
                   >
                     <FaUser className="text-slate-400 text-sm shrink-0" />
                     <span>Profile Settings</span>
                   </Link>
 
-                  <div className="border-t border-white/5 my-1.5" />
+                  <div className="border-t border-black/5 dark:border-white/5 my-1.5" />
 
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-2.5 px-4 py-2.5 text-left text-xs font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/5 transition cursor-pointer"
+                    className="w-full flex items-center gap-2.5 px-4 py-2.5 text-left text-xs font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-500/10 dark:hover:bg-red-500/5 transition cursor-pointer"
                   >
-                    <FaSignOutAlt className="text-sm shrink-0 text-red-400" />
+                    <FaSignOutAlt className="text-sm shrink-0 text-red-600 dark:text-red-400" />
                     <span>Log Out</span>
                   </button>
                 </div>
               )}
             </div>
           )}
+          <ThemeSwitch />
         </div>
       </div>
     </nav>

@@ -35,7 +35,7 @@ export default function TicketCard({ ticket }) {
           variant="solid"
           className="absolute top-4 right-4 font-semibold bg-orange-500/90 text-white border border-orange-400/30"
         >
-          ${ticket.price}
+          Tk{ticket.price}
         </Chip>
       </div>
 
@@ -83,7 +83,10 @@ export default function TicketCard({ ticket }) {
       <CardFooter className="flex items-center justify-between border-t border-white/5 mt-2">
         <div>
           <p className="text-xs text-slate-500">Price per Ticket</p>
-          <p className="text-2xl font-bold text-violet-400">${ticket.price}</p>
+          <p className="text-2xl font-bold text-violet-400">
+            {" "}
+            Tk{ticket.price}
+          </p>
         </div>
 
         <Link href={`/all-tickets/${ticket._id}`}>

@@ -87,10 +87,9 @@ const LoginPage = () => {
         </div>
 
         <Button
-          variant="bordered"
+          variant="outline"
           className="w-full border-white/10 hover:bg-white/5 hover:border-white/20 text-white font-semibold h-11"
           radius="lg"
-          // startContent={<FaGoogle className="text-pink-500" />}
         >
           Google Account
         </Button>

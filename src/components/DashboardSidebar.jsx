@@ -143,15 +143,15 @@ const DashboardSidebar = () => {
   };
   return (
     <div>
-      <aside className="w-64 h-screen border-r border-white/5 bg-slate-950">
-        <div className="h-full flex flex-col bg-slate-950/80 backdrop-blur-xl">
+      <aside className="w-64 h-screen border-r border-slate-200 dark:border-white/5 bg-white dark:bg-slate-950 transition-colors duration-200">
+        <div className="h-full flex flex-col bg-slate-50/50 dark:bg-slate-950/80 backdrop-blur-xl">
           {/* Brand / Logo */}
-          <div className="px-6 py-5 border-b border-white/5">
+          <div className="px-6 py-5 border-b border-slate-200 dark:border-white/5">
             <Logo />
           </div>
 
           {/* User Profile */}
-          <div className="px-6 py-5 border-b border-white/5">
+          <div className="px-6 py-5 border-b border-slate-200 dark:border-white/5">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-pink-500/60 shrink-0">
                 <Image
@@ -159,7 +159,9 @@ const DashboardSidebar = () => {
                   height={40}
                   src={
                     user?.image ||
-                    `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || "U")}&background=7c3aed&color=fff&bold=true`
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                      user?.name || "U",
+                    )}&background=7c3aed&color=fff&bold=true`
                   }
                   alt="Avatar"
                   className="object-cover w-full h-full"
@@ -167,16 +169,16 @@ const DashboardSidebar = () => {
                 />
               </div>
               <div className="overflow-hidden">
-                <p className="text-white text-sm font-bold truncate leading-tight">
+                <p className="text-slate-900 dark:text-white text-sm font-bold truncate leading-tight">
                   {user?.name}
                 </p>
                 <span
                   className={`text-[10px] font-bold uppercase tracking-wider ${
                     role === "admin"
-                      ? "text-yellow-400"
+                      ? "text-amber-600 dark:text-yellow-400"
                       : role === "user"
-                        ? "text-orange-400"
-                        : "text-pink-400"
+                        ? "text-orange-600 dark:text-orange-400"
+                        : "text-pink-600 dark:text-pink-400"
                   }`}
                 >
                   {role}
@@ -187,7 +189,7 @@ const DashboardSidebar = () => {
 
           {/* Navigation Menu */}
           <nav className="grow overflow-y-auto px-3 py-4 space-y-1">
-            <p className="text-[10px] text-slate-600 font-bold uppercase tracking-widest px-3 pb-2">
+            <p className="text-[10px] text-slate-400 dark:text-slate-600 font-bold uppercase tracking-widest px-3 pb-2">
               Navigation
             </p>
 
@@ -197,26 +199,24 @@ const DashboardSidebar = () => {
                 <Link
                   key={key}
                   href={href}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 cursor-pointer
-                ${
-                  isActive
-                    ? "bg-orange-500/10 text-orange-400 border border-orange-500/20"
-                    : "text-slate-400 hover:text-white hover:bg-white/5"
-                }`}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 cursor-pointer ${
+                    isActive
+                      ? "bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/5"
+                  }`}
                 >
                   <span
-                    className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors
-                  ${
-                    isActive
-                      ? "bg-orange-500/20 text-orange-400"
-                      : "bg-white/5 text-slate-400 group-hover:text-white"
-                  }`}
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
+                      isActive
+                        ? "bg-orange-500/20 text-orange-600 dark:text-orange-400"
+                        : "bg-slate-200/60 dark:bg-white/5 text-slate-500 dark:text-slate-400"
+                    }`}
                   >
                     <Icon size={14} />
                   </span>
                   <span>{label}</span>
                   {isActive && (
-                    <span className="ml-auto w-1.5 h-1.5 rounded-full bg-orange-400" />
+                    <span className="ml-auto w-1.5 h-1.5 rounded-full bg-orange-500 dark:bg-orange-400" />
                   )}
                 </Link>
               );
@@ -224,21 +224,21 @@ const DashboardSidebar = () => {
           </nav>
 
           {/* Bottom Links */}
-          <div className="px-3 py-4 border-t border-white/5 space-y-1">
+          <div className="px-3 py-4 border-t border-slate-200 dark:border-white/5 space-y-1">
             <Link
               href="/"
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-150"
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/5 transition-all duration-150"
             >
-              <span className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
+              <span className="w-8 h-8 rounded-lg bg-slate-200/60 dark:bg-white/5 flex items-center justify-center shrink-0 text-slate-500 dark:text-slate-400">
                 <FaHome size={13} />
               </span>
               Back to Site
             </Link>
             <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-red-400 hover:bg-red-500/5 transition-all duration-150 cursor-pointer"
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-500/10 dark:hover:bg-red-500/5 transition-all duration-150 cursor-pointer"
             >
-              <span className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
+              <span className="w-8 h-8 rounded-lg bg-slate-200/60 dark:bg-white/5 flex items-center justify-center shrink-0 text-slate-500 dark:text-slate-400">
                 <FaSignOutAlt size={13} />
               </span>
               Sign Out

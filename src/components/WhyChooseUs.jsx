@@ -29,16 +29,16 @@ const features = [
 
 export default function WhyChooseUs() {
   return (
-    <section className="bg-[#F7F8FA] px-6 py-16 lg:px-12">
+    <section className="bg-slate-100 dark:bg-[#0B1320] px-6 py-16 lg:px-12 transition-colors duration-200">
       <div className="mx-auto max-w-7xl">
         <div className="mb-10 text-center">
-          <span className="text-xs font-semibold uppercase tracking-wider text-amber-600">
+          <span className="text-xs font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-500">
             The TicketTrail Difference
           </span>
-          <h2 className="mt-2 text-3xl font-bold text-[#0B1320] sm:text-4xl">
+          <h2 className="mt-2 text-3xl font-bold text-slate-900 dark:text-white sm:text-4xl">
             Why Choose Us?
           </h2>
-          <p className="mt-3 text-sm text-[#5C6779] sm:text-base">
+          <p className="mt-3 text-sm text-slate-600 dark:text-[#8A96A8] sm:text-base">
             Booking should be the easy part of the journey.
           </p>
         </div>
@@ -49,15 +49,15 @@ export default function WhyChooseUs() {
             return (
               <div
                 key={feature.title}
-                className="rounded-2xl border border-[#E5E7EB] bg-white p-6 transition-shadow hover:shadow-lg hover:shadow-black/5"
+                className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900/60 p-6 transition-shadow hover:shadow-lg hover:shadow-black/5 dark:hover:shadow-amber-500/5"
               >
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400">
                   <Icon className="h-6 w-6" strokeWidth={1.75} />
                 </span>
-                <h3 className="mt-4 text-base font-semibold text-[#0B1320]">
+                <h3 className="mt-4 text-base font-semibold text-slate-900 dark:text-white">
                   {feature.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-[#5C6779]">
+                <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-[#8A96A8]">
                   {feature.description}
                 </p>
               </div>
