@@ -24,18 +24,13 @@ const DashboardSidebar = () => {
   const { data: session } = useSession();
   const user = session?.user;
   const role = user?.role;
-  // const role = "user";
+  // const role = "admin";
+
   const pathname = usePathname();
 
   // console.log(user, "DASHBOARD SIDEBAR");
 
   const vendorMenuItems = [
-    {
-      key: "overview",
-      label: "Overview",
-      icon: FaUsers,
-      href: "/dashboard/vendor",
-    },
     {
       key: "profile",
       label: "Profile",
@@ -70,12 +65,6 @@ const DashboardSidebar = () => {
 
   const userMenuItems = [
     {
-      key: "overview",
-      label: "Overview",
-      icon: FaUserCircle,
-      href: "/dashboard/user",
-    },
-    {
       key: "profile",
       label: "Profile",
       icon: FaUserCircle,
@@ -95,12 +84,6 @@ const DashboardSidebar = () => {
     },
   ];
   const adminMenuItems = [
-    {
-      key: "profile",
-      label: "Profile",
-      icon: FaUserShield,
-      href: "/dashboard/admin/profile",
-    },
     {
       key: "profile",
       label: "Profile",

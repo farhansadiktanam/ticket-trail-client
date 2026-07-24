@@ -23,6 +23,7 @@ export const auth = betterAuth({
   user: {
     additionalFields: {
       role: {
+        type: "string",
         defaultValue: "user",
       },
       isBlocked: {
@@ -30,5 +31,14 @@ export const auth = betterAuth({
       },
     },
   },
+
+  session: {
+    cookieCache: {
+      enabled: true,
+      strategy: "jwr",
+      maxAge: 60 * 24 * 30,
+    },
+  },
+
   plugins: [jwt()],
 });

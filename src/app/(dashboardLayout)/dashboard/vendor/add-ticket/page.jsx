@@ -48,9 +48,10 @@ export default function VendorAddTicketPage() {
   }
 
   async function handleSubmit(e) {
+    const { data: token } = await authClient.token();
+    console.log(token);
     e.preventDefault();
     setError("");
-
     if (!imageFile) return setError("Please select an image.");
 
     const formData = new FormData(e.target);
