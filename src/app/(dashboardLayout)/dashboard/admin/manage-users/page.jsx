@@ -15,7 +15,7 @@ export default function AdminUsersPage() {
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/users`)
       .then((r) => r.json())
-      .then(setUsers);
+      .then((data) => setUsers(data.users || data));
   }, []);
 
   async function updateRole(email, role) {
@@ -59,7 +59,7 @@ export default function AdminUsersPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">
-            {users.map((user) => (
+            {users?.map((user) => (
               <tr key={user._id}>
                 <td className="px-5 py-4 font-medium text-white">
                   {user.name}

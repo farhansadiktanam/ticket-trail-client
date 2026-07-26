@@ -5,8 +5,18 @@ import {
   Megaphone,
   CircleDollarSign,
   TrendingUp,
+  ChevronRight,
+  ChevronLeft,
 } from "lucide-react";
-import { Card, CardContent as CardBody, CardHeader } from "@heroui/react";
+import {
+  Card,
+  CardContent as CardBody,
+  CardHeader,
+  Table,
+  Pagination,
+} from "@heroui/react";
+import { getBooking, getUsers } from "@/lib/server";
+import Link from "next/link";
 
 // ── Static data — replace with real fetch later ───────────────────────────
 const stats = [
@@ -47,41 +57,6 @@ const stats = [
   },
 ];
 
-const getUsers = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/users`);
-  const data = await res.json();
-  return data || [];
-};
-
-const pendingTickets = [
-  {
-    _id: "1",
-    title: "Dhaka to Chittagong Deluxe",
-    vendorEmail: "vendor1@email.com",
-    price: 1200,
-    transportType: "bus",
-  },
-  {
-    _id: "2",
-    title: "Dhaka to Sylhet Night Coach",
-    vendorEmail: "vendor2@email.com",
-    price: 700,
-    transportType: "bus",
-  },
-  {
-    _id: "3",
-    title: "Dhaka to Rajshahi Express",
-    vendorEmail: "vendor3@email.com",
-    price: 600,
-    transportType: "train",
-  },
-];
-
-const getBooking = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/bookings`);
-  return res.json() || [];
-};
-
 const monthlyData = [
   { month: "Feb", value: 40 },
   { month: "Mar", value: 65 },
@@ -104,10 +79,16 @@ const TRANSPORT_STYLES = {
   flight: "bg-purple-500/10 text-purple-400",
 };
 
-export default async function AdminOverviewPage() {
+export default async function AdminOverviewPage({ searchParams }) {
+  const sParams = await searchParams;
   const max = Math.max(...monthlyData.map((d) => d.value));
-  const users = await getUsers();
-  const bookings = await getBooking();
+  const { users, total_page, page } = await getUsers(sParams);
+  const { bookings } = await getBooking(sParams);
+
+  const pages = [];
+  for (let i = 1; i <= total_page; i++) {
+    pages.push(i);
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -254,6 +235,59 @@ export default async function AdminOverviewPage() {
                 ))}
               </tbody>
             </table>
+
+            {/* Pagination */}
+            <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/5">
+              <p className="text-xs text-slate-500">
+                Page <span className="text-white font-semibold">{page}</span> of{" "}
+                <span className="text-white font-semibold">{total_page}</span>
+              </p>
+
+              <div className="flex items-center gap-2">
+                <Link
+                  href={`?page=${Math.max(1, Number(page) - 1)}`}
+                  className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors ${
+                    Number(page) <= 1
+                      ? "text-slate-600 border-white/5 pointer-events-none"
+                      : "text-slate-300 border-white/10 hover:bg-white/5 hover:text-white"
+                  }`}
+                >
+                  <ChevronLeft size={14} />
+                  Prev
+                </Link>
+
+                {/* Page number buttons */}
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: total_page }, (_, i) => i + 1).map(
+                    (p) => (
+                      <Link
+                        key={p}
+                        href={`?page=${p}`}
+                        className={`w-7 h-7 flex items-center justify-center rounded-lg text-xs font-semibold transition-colors ${
+                          p === Number(page)
+                            ? "bg-orange-500 text-white"
+                            : "text-slate-400 hover:bg-white/5 hover:text-white"
+                        }`}
+                      >
+                        {p}
+                      </Link>
+                    ),
+                  )}
+                </div>
+
+                <Link
+                  href={`?page=${Math.min(total_page, Number(page) + 1)}`}
+                  className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors ${
+                    Number(page) >= total_page
+                      ? "text-slate-600 border-white/5 pointer-events-none"
+                      : "text-slate-300 border-white/10 hover:bg-white/5 hover:text-white"
+                  }`}
+                >
+                  Next
+                  <ChevronRight size={14} />
+                </Link>
+              </div>
+            </div>
           </div>
         </CardBody>
       </Card>

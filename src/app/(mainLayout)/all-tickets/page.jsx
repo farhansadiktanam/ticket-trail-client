@@ -13,7 +13,7 @@ const TicketPage = async ({ searchParams }) => {
   if (from) params.set("from", from);
   if (sort) params.set("sort", sort);
 
-  const tickets = await fetchTickets(searchParams);
+  const tickets = await fetchTickets(params);
   return (
     <div className="min-h-screen py-16 px-6 max-w-7xl mx-auto w-full space-y-12 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200">
       <h1 className="text-4xl font-extrabold text-center tracking-tight text-orange-600 dark:text-orange-400">

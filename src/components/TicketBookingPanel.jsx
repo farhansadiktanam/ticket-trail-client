@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@heroui/react";
 import { Ticket, Shield, CheckCircle2, Minus, Plus } from "lucide-react";
-import Link from "next/link";
 import { authClient, useSession } from "@/lib/auth-client";
 
 export default function TicketBookingPanel({ ticketId, price, quantity }) {
@@ -87,14 +86,12 @@ export default function TicketBookingPanel({ ticketId, price, quantity }) {
           </div>
         </div>
 
-        <Link href={"/dashboard/user/booked-tickets"}>
-          <Button
-            onPress={() => router.push("/my-bookings")}
-            className="mt-5 w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm h-10"
-          >
-            View My Bookings
-          </Button>
-        </Link>
+        <Button
+          onPress={() => router.push("/dashboard/user/booked-tickets")}
+          className="mt-5 w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm h-10"
+        >
+          View My Bookings
+        </Button>
       </div>
     );
   }

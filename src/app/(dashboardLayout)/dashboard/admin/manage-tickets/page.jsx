@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Card, CardBody, Button } from "@heroui/react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const STATUS_STYLES = {
   pending: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
@@ -11,12 +12,25 @@ const STATUS_STYLES = {
 
 export default function AdminTicketsPage() {
   const [tickets, setTickets] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/admin/tickets`)
+    const load = () => {
+      setLoading(true);
+    };
+    load();
+    fetch(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/admin/tickets?page=${page}&limit=8`,
+    )
       .then((r) => r.json())
-      .then(setTickets);
-  }, []);
+      .then((data) => {
+        setTickets(data.tickets || []);
+        setTotalPage(data.total_page || 1);
+      })
+      .finally(() => setLoading(false));
+  }, [page]); // ✅ re-fetch whenever page changes
 
   async function updateStatus(id, status) {
     await fetch(
@@ -27,7 +41,6 @@ export default function AdminTicketsPage() {
         body: JSON.stringify({ verificationStatus: status }),
       },
     );
-    // update UI instantly
     setTickets((prev) =>
       prev.map((t) =>
         t._id === id ? { ...t, verificationStatus: status } : t,
@@ -91,6 +104,50 @@ export default function AdminTicketsPage() {
             ))}
           </tbody>
         </table>
+
+        {/* Pagination */}
+        <div className="flex items-center justify-between px-5 py-4 border-t border-white/5">
+          <p className="text-xs text-slate-500">
+            Page <span className="text-white font-semibold">{page}</span> of{" "}
+            <span className="text-white font-semibold">{totalPage}</span>
+          </p>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page <= 1}
+              className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold border border-white/10 text-slate-300 hover:bg-white/5 hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-colors"
+            >
+              <ChevronLeft size={14} />
+              Prev
+            </button>
+
+            <div className="flex items-center gap-1">
+              {Array.from({ length: totalPage }, (_, i) => i + 1).map((p) => (
+                <button
+                  key={p}
+                  onClick={() => setPage(p)}
+                  className={`w-7 h-7 flex items-center justify-center rounded-lg text-xs font-semibold transition-colors ${
+                    p === page
+                      ? "bg-orange-500 text-white"
+                      : "text-slate-400 hover:bg-white/5 hover:text-white"
+                  }`}
+                >
+                  {p}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => setPage((p) => Math.min(totalPage, p + 1))}
+              disabled={page >= totalPage}
+              className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold border border-white/10 text-slate-300 hover:bg-white/5 hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-colors"
+            >
+              Next
+              <ChevronRight size={14} />
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
