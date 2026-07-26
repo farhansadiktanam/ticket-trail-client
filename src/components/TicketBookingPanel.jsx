@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@heroui/react";
 import { Ticket, Shield, CheckCircle2, Minus, Plus } from "lucide-react";
 import Link from "next/link";
-import { useSession } from "@/lib/auth-client";
+import { authClient, useSession } from "@/lib/auth-client";
 
 export default function TicketBookingPanel({ ticketId, price, quantity }) {
   const { data: session } = useSession();
@@ -20,12 +20,26 @@ export default function TicketBookingPanel({ ticketId, price, quantity }) {
 
   async function handleBook() {
     setLoading(true);
+
     try {
+      const tokenRes = await authClient.token();
+      const rawToken =
+        typeof tokenRes === "string"
+          ? tokenRes
+          : tokenRes?.data || tokenRes?.token;
+
+      if (!rawToken) {
+        throw new Error("Authentication token missing. Please sign in again.");
+      }
+
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/bookings`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${rawToken.token}`,
+          },
           body: JSON.stringify({
             ticketId,
             quantity: qty,

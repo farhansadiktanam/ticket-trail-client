@@ -30,7 +30,7 @@ export default function TicketCard({ ticket }) {
           loading="eager"
           className="object-cover transition-transform duration-500 group-hover:scale-110"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/20 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-slate-950/70 via-slate-950/20 to-transparent" />
         <Chip
           variant="solid"
           className="absolute top-4 right-4 font-semibold bg-orange-500 text-white border border-orange-400/30 shadow-md"

@@ -76,7 +76,6 @@ export default function VendorAddedTicketsPage() {
   const [tickets, setTickets] = useState([]);
   const { data: session } = useSession();
   const user = session?.user;
-  console.log(user);
 
   useEffect(() => {
     if (!user?.email) return;
@@ -109,7 +108,7 @@ export default function VendorAddedTicketsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white">My Added Tickets</h1>
-        <Link href="/vendor/add-ticket">
+        <Link href="/dashboard/vendor/add-ticket">
           <Button className="bg-orange-500 hover:bg-orange-400 text-white font-semibold text-sm h-9 px-4">
             + Add Ticket
           </Button>
@@ -123,7 +122,7 @@ export default function VendorAddedTicketsPage() {
           <p className="mt-1 text-sm text-slate-500">
             Start by adding your first ticket.
           </p>
-          <Link href="/vendor/add-ticket" className="mt-4">
+          <Link href="/dashboard/vendor/add-ticket" className="mt-4">
             <Button className="bg-orange-500 text-white font-semibold text-sm h-9 px-4">
               Add Ticket
             </Button>

@@ -48,8 +48,6 @@ export default function VendorAddTicketPage() {
   }
 
   async function handleSubmit(e) {
-    const { data: token } = await authClient.token();
-    console.log(token);
     e.preventDefault();
     setError("");
     if (!imageFile) return setError("Please select an image.");
@@ -58,6 +56,20 @@ export default function VendorAddTicketPage() {
 
     try {
       setLoading(true);
+
+      const tokenRes = await authClient.token();
+      console.log("Better Auth Token Response:", tokenRes);
+      const rawToken =
+        typeof tokenRes === "string"
+          ? tokenRes
+          : tokenRes?.data || tokenRes?.token;
+
+      console.log("Better Auth Raw Token Response:", rawToken);
+
+      if (!rawToken) {
+        throw new Error("Authentication token missing. Please sign in again.");
+      }
+
       const imageUrl = await uploadImage(imageFile);
       const payload = {
         title: formData.get("title"),
@@ -77,7 +89,10 @@ export default function VendorAddTicketPage() {
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/tickets`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${rawToken.token}`,
+        },
         body: JSON.stringify(payload),
       });
 

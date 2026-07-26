@@ -1,176 +1,175 @@
 "use client";
 
 import { useState } from "react";
-import { Card, Input, Button, Label } from "@heroui/react";
-import { FaSearch, FaSlidersH, FaHistory } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { Card } from "@heroui/react";
+import { FaSlidersH, FaHistory } from "react-icons/fa";
 
-const transportTypes = ["Bus", "Train", "Launch", "Flight"];
+const TRANSPORT_TYPES = ["Bus", "Train", "Launch", "Flight"];
 
-const LOCATIONS = [
-  "New York",
-  "San Francisco",
-  "London",
+const FROM_LOCATIONS = [
   "Dhaka",
-  "Tokyo",
-  "Berlin",
-  "Online",
+  "Chittagong",
+  "Sylhet",
+  "Rajshahi",
+  "Khulna",
+  "Barishal",
+  "Cox's Bazar",
 ];
 
+const SORT_OPTIONS = [
+  { label: "Newest First", value: "" },
+  { label: "Price: Low → High", value: "price_asc" },
+  { label: "Price: High → Low", value: "price_desc" },
+  { label: "Title: A → Z", value: "title_asc" },
+];
+
+const selectCls =
+  "w-full h-11 pl-4 pr-10 rounded-xl border border-white/10 bg-slate-900/60 text-white text-sm appearance-none cursor-pointer focus:outline-none focus:border-orange-500/40 transition-colors";
+
 export default function FilterPanel() {
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("");
-  const [location, setLocation] = useState("");
   const router = useRouter();
 
-  const handleApplyFilters = () => {
+  const [search, setSearch] = useState("");
+  const [transportType, setTransportType] = useState("");
+  const [from, setFrom] = useState("");
+  const [sort, setSort] = useState("");
+
+  function handleApply() {
     const params = new URLSearchParams();
+    if (search) params.set("search", search);
+    if (transportType) params.set("transportType", transportType);
+    if (from) params.set("from", from);
+    if (sort) params.set("sort", sort);
+    router.push(`/all-tickets?${params.toString()}`);
+  }
 
-    if (search) {
-      params.set("search", search);
-    }
-    if (category) params.set("category", category);
-    if (location) params.set("location", location);
-
-    router.push(`/events?${params.toString()}`);
-  };
-
-  // const handleReset = () => {
-  //   setSearch("");
-  //   setCategory("");
-  //   setLocation("");
-  //   router.push("/events");
-  // };
+  function handleReset() {
+    setSearch("");
+    setTransportType("");
+    setFrom("");
+    setSort("");
+    router.push("/all-tickets");
+  }
 
   return (
-    <Card className="relative overflow-hidden p-6 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900/60 backdrop-blur-xl shadow-2xl transition-colors duration-200">
-      {/* Glows */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-pink-500/10 blur-3xl pointer-events-none -z-10" />
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/10 blur-3xl pointer-events-none -z-10" />
-
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-        {/* Search */}
-        <div className="flex flex-col gap-2">
-          <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+    <Card className="bg-slate-900/60 border border-white/10 backdrop-blur-xl p-5 rounded-2xl">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5 items-end">
+        {/* Search by title */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
             Search Title
           </label>
-          <Input
+          <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search keyword..."
-            variant="bordered"
-            className="bg-slate-50 dark:bg-slate-900/60 border-slate-200 dark:border-white/10 text-slate-900 dark:text-white h-11"
+            placeholder="e.g. Dhaka to Sylhet"
+            className={selectCls}
           />
         </div>
 
-        {/* Transport */}
-        <div className="flex flex-col gap-2">
-          <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        {/* Transport Type */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
             Transport Type
           </label>
           <div className="relative">
             <select
-              // value={transportTypes}
-              onChange={(e) => setTransport(e.target.value)}
-              className="w-full h-11 pl-4 pr-10 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-900/60 text-slate-900 dark:text-white text-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-colors"
+              value={transportType}
+              onChange={(e) => setTransportType(e.target.value)}
+              className={selectCls}
             >
-              <option
-                value=""
-                className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
-              >
-                All Transport
-              </option>
-              {transportTypes.map((type) => (
-                <option
-                  key={type}
-                  value={type}
-                  className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
-                >
-                  {type}
+              <option value="">All Types</option>
+              {TRANSPORT_TYPES.map((t) => (
+                <option key={t} value={t.toLowerCase()}>
+                  {t}
                 </option>
               ))}
             </select>
-            <svg
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
+            <ChevronIcon />
           </div>
         </div>
 
-        {/* Location */}
-        <div className="flex flex-col gap-2">
-          <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-            Location
+        {/* From Location */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            From
           </label>
           <div className="relative">
             <select
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              className="w-full h-11 pl-4 pr-10 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-900/60 text-slate-900 dark:text-white text-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-colors"
+              value={from}
+              onChange={(e) => setFrom(e.target.value)}
+              className={selectCls}
             >
-              <option
-                value=""
-                className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
-              >
-                All Locations
-              </option>
-              {LOCATIONS.map((loc) => (
-                <option
-                  key={loc}
-                  value={loc}
-                  className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
-                >
+              <option value="">All Locations</option>
+              {FROM_LOCATIONS.map((loc) => (
+                <option key={loc} value={loc}>
                   {loc}
                 </option>
               ))}
             </select>
-            <svg
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+            <ChevronIcon />
+          </div>
+        </div>
+
+        {/* Sort */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            Sort By
+          </label>
+          <div className="relative">
+            <select
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+              className={selectCls}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
+              {SORT_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+            <ChevronIcon />
           </div>
         </div>
 
         {/* Buttons */}
         <div className="flex gap-2">
-          <Button
-            // onClick={handleApply}
-            startContent={<FaSlidersH size={13} />}
-            className="bg-[#F2B134] text-[#0B1320] font-semibold h-11 px-5 hover:bg-[#F5C158] flex-1 shadow-sm"
-            radius="lg"
+          <button
+            onClick={handleApply}
+            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-orange-500 hover:bg-orange-400 text-white font-semibold text-sm h-11 px-4 transition"
           >
+            <FaSlidersH size={13} />
             Apply
-          </Button>
-          <Button
-            // onClick={handleReset}
-            variant="bordered"
-            isIconOnly
-            className="border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-600 dark:text-slate-400 h-11 w-11 transition-colors"
-            radius="lg"
-            title="Reset"
+          </button>
+          <button
+            onClick={handleReset}
+            title="Reset filters"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 text-slate-400 hover:text-white hover:bg-white/5 transition"
           >
             <FaHistory size={13} />
-          </Button>
+          </button>
         </div>
       </div>
     </Card>
+  );
+}
+
+// small helper — avoids repeating the chevron SVG 3 times
+function ChevronIcon() {
+  return (
+    <svg
+      className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M19 9l-7 7-7-7"
+      />
+    </svg>
   );
 }
