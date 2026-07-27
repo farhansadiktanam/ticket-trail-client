@@ -17,3 +17,16 @@ export const getBooking = async (sParams) => {
   );
   return res.json() || [];
 };
+
+export const payment = async (data) => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/payment`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  const result = await res.json();
+  return result;
+};

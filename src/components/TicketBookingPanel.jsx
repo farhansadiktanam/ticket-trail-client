@@ -6,7 +6,12 @@ import { Button } from "@heroui/react";
 import { Ticket, Shield, CheckCircle2, Minus, Plus } from "lucide-react";
 import { authClient, useSession } from "@/lib/auth-client";
 
-export default function TicketBookingPanel({ ticketId, price, quantity }) {
+export default function TicketBookingPanel({
+  ticketId,
+  price,
+  quantity,
+  ticketTitle,
+}) {
   const { data: session } = useSession();
 
   const router = useRouter();
@@ -168,19 +173,26 @@ export default function TicketBookingPanel({ ticketId, price, quantity }) {
         </div>
 
         {/* Book button */}
-        <Button
-          onPress={handleBook}
-          isLoading={loading}
-          isDisabled={soldOut}
-          className={`w-full font-bold text-sm h-10 ${
-            soldOut
-              ? "bg-white/5 text-slate-600 cursor-not-allowed"
-              : "bg-linear-to-r from-orange-500 to-indigo-600 text-white shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30"
-          }`}
-        >
-          {!loading && <Ticket className="h-4 w-4 mr-1.5" />}
-          {soldOut ? "Sold Out" : "Confirm Booking"}
-        </Button>
+
+        <form action="/api/payment" method="POST">
+          <input type="hidden" value={price} name="price" />
+          <input type="hidden" value={ticketTitle} name="ticketTitle" />
+          <input type="hidden" value={ticketId} name="ticketId" />
+          <Button
+            onPress={handleBook}
+            isLoading={loading}
+            type="submit"
+            isDisabled={soldOut}
+            className={`w-full font-bold text-sm h-10 ${
+              soldOut
+                ? "bg-white/5 text-slate-600 cursor-not-allowed"
+                : "bg-linear-to-r from-orange-500 to-indigo-600 text-white shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30"
+            }`}
+          >
+            {!loading && <Ticket className="h-4 w-4 mr-1.5" />}
+            {soldOut ? "Sold Out" : "Confirm Booking"}
+          </Button>
+        </form>
 
         {/* Trust line */}
         <p className="flex items-center justify-center gap-1.5 text-xs text-slate-500">

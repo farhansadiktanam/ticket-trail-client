@@ -166,6 +166,7 @@ export default async function TicketDetailsPage({ params }) {
           {/* ── Right: booking panel ── */}
           <div className="lg:col-span-1">
             <TicketBookingPanel
+              ticketTitle={ticket.title}
               ticketId={ticket._id}
               price={price}
               quantity={quantity}

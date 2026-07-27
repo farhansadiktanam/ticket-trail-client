@@ -98,7 +98,7 @@ export default function VendorAddTicketPage() {
 
       if (!res.ok) throw new Error("Failed to submit ticket");
 
-      router.push("/all-tickets");
+      router.push("/dashboard/vendor/added-ticket");
     } catch (err) {
       setError(err.message);
     } finally {
