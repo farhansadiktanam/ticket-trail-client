@@ -13,7 +13,7 @@ import {
 } from "@heroui/react";
 import { FaEnvelope, FaLock, FaGoogle } from "react-icons/fa";
 import Logo from "@/components/logo";
-import { signIn } from "@/lib/auth-client";
+import { authClient, signIn } from "@/lib/auth-client";
 import toast from "react-hot-toast";
 import { redirect } from "next/navigation";
 
@@ -33,6 +33,12 @@ const LoginPage = () => {
     console.log(loginData);
 
     redirect("/");
+  };
+
+  const handleGoogleSignIn = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+    });
   };
 
   return (
@@ -87,6 +93,7 @@ const LoginPage = () => {
         </div>
 
         <Button
+          onClick={handleGoogleSignIn}
           variant="outline"
           className="w-full border-white/10 hover:bg-white/5 hover:border-white/20 text-white font-semibold h-11"
           radius="lg"

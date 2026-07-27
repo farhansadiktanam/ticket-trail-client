@@ -20,6 +20,12 @@ export const auth = betterAuth({
         process.env.GOOGLE_CLIENT_SECRET || "placeholder-google-client-secret",
     },
   },
+  account: {
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["google", "github"], // add your providers
+    },
+  },
   user: {
     additionalFields: {
       role: {

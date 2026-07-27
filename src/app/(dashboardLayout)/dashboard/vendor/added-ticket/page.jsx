@@ -3,7 +3,25 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Card, CardContent as CardBody, Button } from "@heroui/react";
+import {
+  Card,
+  CardContent as CardBody,
+  Button,
+  Modal,
+  ModalBackdrop,
+  ModalContainer,
+  ModalDialog,
+  ModalHeader,
+  ModalHeading,
+  ModalBody,
+  ModalFooter,
+  ModalCloseTrigger,
+  TextField,
+  Label,
+  Input,
+  Select,
+  useOverlayState,
+} from "@heroui/react";
 import {
   Bus,
   TrainFront,
@@ -16,49 +34,6 @@ import {
 } from "lucide-react";
 import { useSession } from "@/lib/auth-client";
 
-// ── Replace this with a real fetch from your API ──────────────────────────
-const SAMPLE_TICKETS = [
-  {
-    _id: "1",
-    image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800",
-    title: "Dhaka to Chittagong Deluxe",
-    from: "Dhaka",
-    to: "Chittagong",
-    transportType: "bus",
-    price: 1200,
-    quantity: 8,
-    departureDate: "2026-08-10",
-    departureTime: "08:00",
-    verificationStatus: "approved",
-  },
-  {
-    _id: "2",
-    image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800",
-    title: "Dhaka to Cox's Bazar Express",
-    from: "Dhaka",
-    to: "Cox's Bazar",
-    transportType: "bus",
-    price: 850,
-    quantity: 14,
-    departureDate: "2026-08-12",
-    departureTime: "21:00",
-    verificationStatus: "pending",
-  },
-  {
-    _id: "3",
-    image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800",
-    title: "Dhaka to Sylhet Night Coach",
-    from: "Dhaka",
-    to: "Sylhet",
-    transportType: "bus",
-    price: 700,
-    quantity: 0,
-    departureDate: "2026-08-15",
-    departureTime: "22:00",
-    verificationStatus: "rejected",
-  },
-];
-
 const TRANSPORT_ICONS = {
   bus: Bus,
   train: TrainFront,
@@ -68,14 +43,18 @@ const TRANSPORT_ICONS = {
 
 const STATUS_STYLES = {
   pending: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
-  approved: "bg-green-500/10  text-green-400  border-green-500/20",
-  rejected: "bg-red-500/10   text-red-400    border-red-500/20",
+  approved: "bg-green-500/10 text-green-400 border-green-500/20",
+  rejected: "bg-red-500/10 text-red-400 border-red-500/20",
 };
 
 export default function VendorAddedTicketsPage() {
   const [tickets, setTickets] = useState([]);
   const { data: session } = useSession();
   const user = session?.user;
+
+  const modalState = useOverlayState();
+  const [selectedTicket, setSelectedTicket] = useState(null);
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     if (!user?.email) return;
@@ -90,6 +69,7 @@ export default function VendorAddedTicketsPage() {
 
     getVendorTickets();
   }, [user?.email]);
+
   async function handleDelete(id) {
     const confirmed = window.confirm(
       "Are you sure you want to delete this ticket?",
@@ -101,6 +81,58 @@ export default function VendorAddedTicketsPage() {
     });
 
     setTickets((prev) => prev.filter((t) => t._id !== id));
+  }
+
+  // ── Open modal with selected ticket data ─────────────
+  function handleUpdateClick(ticket) {
+    setSelectedTicket({ ...ticket });
+    modalState.open();
+  }
+
+  // ── Update fields in local state ─────────────────────
+  function handleModalChange(e) {
+    const { name, value } = e.target;
+    setSelectedTicket((prev) => ({ ...prev, [name]: value }));
+  }
+
+  // ── Save changes ─────────────────────────────────────
+  async function handleUpdateSubmit() {
+    if (!selectedTicket) return;
+    setUpdating(true);
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/tickets/${selectedTicket._id}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: selectedTicket.title,
+            from: selectedTicket.from,
+            to: selectedTicket.to,
+            transportType: selectedTicket.transportType,
+            price: Number(selectedTicket.price),
+            quantity: Number(selectedTicket.quantity),
+            departureDate: selectedTicket.departureDate,
+            departureTime: selectedTicket.departureTime,
+          }),
+        },
+      );
+
+      if (!res.ok) throw new Error("Update failed");
+
+      setTickets((prev) =>
+        prev.map((t) =>
+          t._id === selectedTicket._id ? { ...t, ...selectedTicket } : t,
+        ),
+      );
+
+      modalState.close();
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setUpdating(false);
+    }
   }
 
   return (
@@ -150,13 +182,11 @@ export default function VendorAddedTicketsPage() {
                   unoptimized
                   className="rounded-xl object-cover"
                 />
-                {/* Status badge */}
                 <span
                   className={`absolute top-3 left-3 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm ${STATUS_STYLES[ticket.verificationStatus]}`}
                 >
                   {ticket.verificationStatus}
                 </span>
-                {/* Transport badge */}
                 <span className="absolute top-3 right-3 flex items-center gap-1 bg-slate-950/80 backdrop-blur-sm text-slate-300 text-[10px] font-semibold uppercase px-2.5 py-1 rounded-full border border-white/10">
                   <Icon className="h-3 w-3" />
                   {ticket.transportType}
@@ -164,24 +194,20 @@ export default function VendorAddedTicketsPage() {
               </div>
 
               <CardBody className="flex flex-col gap-3 p-4">
-                {/* Title */}
                 <h3 className="font-bold text-white text-sm line-clamp-1">
                   {ticket.title}
                 </h3>
 
-                {/* Route */}
                 <div className="flex items-center gap-1.5 text-xs text-slate-400">
                   <MapPin className="h-3.5 w-3.5 text-orange-500 shrink-0" />
                   {ticket.from} → {ticket.to}
                 </div>
 
-                {/* Date */}
                 <div className="flex items-center gap-1.5 text-xs text-slate-400">
                   <Calendar className="h-3.5 w-3.5 text-slate-600 shrink-0" />
                   {ticket.departureDate} at {ticket.departureTime}
                 </div>
 
-                {/* Price & Quantity */}
                 <div className="flex items-center justify-between text-sm">
                   <span className="font-bold text-white">
                     ৳{ticket.price.toLocaleString()}
@@ -191,23 +217,18 @@ export default function VendorAddedTicketsPage() {
                   </span>
                 </div>
 
-                {/* Divider */}
                 <div className="border-t border-dashed border-white/5" />
 
                 {/* Action Buttons */}
                 <div className="flex gap-2">
-                  <Link
-                    href={`/vendor/update-ticket/${ticket._id}`}
-                    className="flex-1"
+                  <Button
+                    isDisabled={isRejected}
+                    onPress={() => handleUpdateClick(ticket)}
+                    className="flex-1 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 text-white font-semibold text-xs h-9"
                   >
-                    <Button
-                      isDisabled={isRejected}
-                      className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 text-white font-semibold text-xs h-9"
-                    >
-                      <Pencil className="h-3.5 w-3.5 mr-1" />
-                      Update
-                    </Button>
-                  </Link>
+                    <Pencil className="h-3.5 w-3.5 mr-1" />
+                    Update
+                  </Button>
                   <Button
                     isDisabled={isRejected}
                     onPress={() => handleDelete(ticket._id)}
@@ -222,6 +243,156 @@ export default function VendorAddedTicketsPage() {
           );
         })}
       </div>
+
+      {/* ── HeroUI Update Modal ── */}
+      <Modal state={modalState}>
+        <ModalBackdrop variant="blur">
+          <ModalContainer size="lg">
+            <ModalDialog className="bg-slate-900 border border-white/10 text-white">
+              <ModalCloseTrigger />
+
+              <ModalHeader className="border-b border-white/5">
+                <ModalHeading className="text-white text-lg font-semibold">
+                  Update Ticket
+                </ModalHeading>
+              </ModalHeader>
+
+              <ModalBody className="py-4 flex flex-col gap-4">
+                {selectedTicket && (
+                  <>
+                    <TextField>
+                      <Label className="text-xs text-slate-400 mb-1 block">
+                        Ticket Title
+                      </Label>
+                      <Input
+                        name="title"
+                        value={selectedTicket.title}
+                        onChange={handleModalChange}
+                        className="bg-slate-800 border-white/10 text-white text-sm rounded-xl"
+                      />
+                    </TextField>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <TextField>
+                        <Label className="text-xs text-slate-400 mb-1 block">
+                          From
+                        </Label>
+                        <Input
+                          name="from"
+                          value={selectedTicket.from}
+                          onChange={handleModalChange}
+                          className="bg-slate-800 border-white/10 text-white text-sm rounded-xl"
+                        />
+                      </TextField>
+                      <TextField>
+                        <Label className="text-xs text-slate-400 mb-1 block">
+                          To
+                        </Label>
+                        <Input
+                          name="to"
+                          value={selectedTicket.to}
+                          onChange={handleModalChange}
+                          className="bg-slate-800 border-white/10 text-white text-sm rounded-xl"
+                        />
+                      </TextField>
+                    </div>
+
+                    <TextField>
+                      <Label className="text-xs text-slate-400 mb-1 block">
+                        Transport Type
+                      </Label>
+                      <Select
+                        name="transportType"
+                        value={selectedTicket.transportType}
+                        onChange={handleModalChange}
+                        className="bg-slate-800 border-white/10 text-white text-sm rounded-xl"
+                      >
+                        <option value="bus">Bus</option>
+                        <option value="train">Train</option>
+                        <option value="launch">Launch</option>
+                        <option value="flight">Flight</option>
+                      </Select>
+                    </TextField>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <TextField>
+                        <Label className="text-xs text-slate-400 mb-1 block">
+                          Price (৳)
+                        </Label>
+                        <Input
+                          name="price"
+                          type="number"
+                          min={1}
+                          value={selectedTicket.price}
+                          onChange={handleModalChange}
+                          className="bg-slate-800 border-white/10 text-white text-sm rounded-xl"
+                        />
+                      </TextField>
+                      <TextField>
+                        <Label className="text-xs text-slate-400 mb-1 block">
+                          Seats
+                        </Label>
+                        <Input
+                          name="quantity"
+                          type="number"
+                          min={0}
+                          value={selectedTicket.quantity}
+                          onChange={handleModalChange}
+                          className="bg-slate-800 border-white/10 text-white text-sm rounded-xl"
+                        />
+                      </TextField>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <TextField>
+                        <Label className="text-xs text-slate-400 mb-1 block">
+                          Departure Date
+                        </Label>
+                        <Input
+                          name="departureDate"
+                          type="date"
+                          value={selectedTicket.departureDate}
+                          onChange={handleModalChange}
+                          className="bg-slate-800 border-white/10 text-white text-sm rounded-xl scheme:dark"
+                        />
+                      </TextField>
+                      <TextField>
+                        <Label className="text-xs text-slate-400 mb-1 block">
+                          Departure Time
+                        </Label>
+                        <Input
+                          name="departureTime"
+                          type="time"
+                          value={selectedTicket.departureTime}
+                          onChange={handleModalChange}
+                          className="bg-slate-800 border-white/10 text-white text-sm rounded-xl scheme:dark"
+                        />
+                      </TextField>
+                    </div>
+                  </>
+                )}
+              </ModalBody>
+
+              <ModalFooter className="border-t border-white/5 flex justify-end gap-2">
+                <Button
+                  variant="flat"
+                  slot="close"
+                  className="text-slate-400 hover:text-white"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  isPending={updating}
+                  onPress={handleUpdateSubmit}
+                  className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold"
+                >
+                  Save Changes
+                </Button>
+              </ModalFooter>
+            </ModalDialog>
+          </ModalContainer>
+        </ModalBackdrop>
+      </Modal>
     </div>
   );
 }
